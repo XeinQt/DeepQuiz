@@ -72,42 +72,6 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error. Try again later." });
   }
 });
-//werwrwrw
-app.post("/generate-questions", async (req, res) => {
-  const { notes } = req.body; // Receive the notes from the front end
-
-  if (!notes) {
-    return res.status(400).json({ message: "Notes are required" });
-  }
-
-  try {
-    const openaiResponse = await axios.post(
-      "https://api.openai.com/v1/completions",
-      {
-        model: "text-davinci-003",
-        prompt: `Summarize the following notes and generate multiple-choice questions and enumeration questions: Notes: ${notes}`,
-        max_tokens: 150,
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const result = openaiResponse.data.choices[0].text;
-    res.json({ summaryAndQuestions: result.trim() });
-  } catch (error) {
-    console.error(
-      "Error generating questions:",
-      error.response ? error.response.data : error.message
-    );
-    res
-      .status(500)
-      .json({ message: "Error generating questions. Try again later." });
-  }
-});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
